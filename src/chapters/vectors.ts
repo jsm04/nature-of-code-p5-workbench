@@ -1,34 +1,32 @@
 import p5 from 'p5';
 
 export const sketch = (p: p5) => {
-	const targetFps = 1024 * 10;
-	// const { width, height, mouseX, mouseY } = p;
-
-	const translateOriginCordinates = () => {
-		const [tx, ty] = [p.width / 2, p.height / 2];
-		const [mx, my] = [p.mouseX - tx, p.mouseY - ty];
-		return { tx, ty, mx, my };
-	};
+	let position: p5.Vector, velocity: p5.Vector;
 
 	p.setup = () => {
 		p.createCanvas(window.innerWidth, window.innerHeight);
-		p.background(220);
+
+		position = p.createVector(100, 100);
+		velocity = p.createVector(1, 3.3);
 	};
 
 	p.draw = () => {
-		const { tx, ty } = translateOriginCordinates();
+		const [tx, ty] = [p.width, p.height];
 
-		p.translate(tx, ty);
-		p.stroke(0);
+		p.background(220);
 
-		p.line(-tx, 0, tx, 0); // X-axis
-		p.line(0, -ty, 0, ty); // Y-axis
+		position.add(velocity);
 
-		if (p.frameCount >= targetFps) {
-			p.noLoop();
+		if (position.x > tx || position.x < 0) {
+			velocity.x = velocity.x * -1;
+		}
+		if (position.y > ty || position.y < 0) {
+			velocity.y = velocity.y * -1;
 		}
 
-		p.ellipse(0, 0, 80, 80);
+		p.stroke(0);
+		p.fill(127);
+		p.circle(position.x, position.y, 48);
 	};
 };
 

@@ -2,12 +2,13 @@ import p5 from 'p5';
 
 export const sketch = (p: p5) => {
 	const targetFps = 1024 * 10;
-	// const { width, height, mouseX, mouseY } = p;
 
-	const translateOriginCordinates = () => {
-		const [tx, ty] = [p.width / 2, p.height / 2];
+	const translateXYCoordOrigin = () => [p.width / 2, p.height / 2];
+
+	const translateMouseOriginCoords = () => {
+		const [tx, ty] = translateXYCoordOrigin();
 		const [mx, my] = [p.mouseX - tx, p.mouseY - ty];
-		return { tx, ty, mx, my };
+		return { mx, my };
 	};
 
 	p.setup = () => {
@@ -16,8 +17,7 @@ export const sketch = (p: p5) => {
 	};
 
 	p.draw = () => {
-		const { tx, ty } = translateOriginCordinates();
-
+		const [tx, ty] = translateXYCoordOrigin();
 		p.translate(tx, ty);
 		p.stroke(0);
 

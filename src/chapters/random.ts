@@ -1,12 +1,12 @@
 import p5 from 'p5';
 
 export const sketch = (p: p5) => {
-	const targetFps = 1024 * 10;
+	const translateXYCoordOrigin = () => [p.width / 2, p.height / 2];
 
-	const translateOriginCordinates = () => {
-		const [tx, ty] = [p.width / 2, p.height / 2];
+	const translateMouseOriginCoord = () => {
+		const [tx, ty] = translateXYCoordOrigin();
 		const [mx, my] = [p.mouseX - tx, p.mouseY - ty];
-		return { tx, ty, mx, my };
+		return { mx, my };
 	};
 
 	const acceptreject = () => {
@@ -51,7 +51,7 @@ export const sketch = (p: p5) => {
 		}
 
 		step() {
-			const { mx, my } = translateOriginCordinates();
+			const { mx, my } = translateMouseOriginCoord();
 			// Randomly decide between mouse-following or random movement
 			if (p.random() < 0.5) {
 				// 50% chance: Move toward mouse
@@ -119,20 +119,16 @@ export const sketch = (p: p5) => {
 	const walker = new Walker();
 	const dynamicWalker = new DynamicWalker();
 	const montecarloWalker = new MonteCarloWalker();
-	const perlinNoiseWalker = new PerlinNoiseWalker()
+	const perlinNoiseWalker = new PerlinNoiseWalker();
 
 	p.draw = () => {
-		const { tx, ty } = translateOriginCordinates();
+		const [tx, ty] = translateXYCoordOrigin();
 
 		p.translate(tx, ty);
 		p.stroke(0);
 
 		p.line(-tx, 0, tx, 0); // X-axis
 		p.line(0, -ty, 0, ty); // Y-axis
-
-		if (p.frameCount >= targetFps) {
-			p.noLoop();
-		}
 
 		walker.step();
 		walker.show([255, 0, 0]);
